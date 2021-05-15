@@ -11,7 +11,7 @@ def meetings(request):
 
 def meetingsminutes(request):
     meetingminutes_list=MeetingMinutes.objects.all()
-    return render(request, 'Club/meetings.minutes.html', {'meetingminutes_list': meetingminutes_list})
+    return render(request, 'Club/meetingsminutes.html', {'meetingminutes_list': meetingminutes_list})
 
 def resources(request):
     resource_list=Resource.objects.all()
