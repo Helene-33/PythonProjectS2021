@@ -1,8 +1,10 @@
+from Club.forms import MeetingForm
 from django.test import TestCase
 from .models import Meeting, MeetingMinutes, Resource, Event
 from .views import index, meetings, meetingsdetail, meetingsminutes, resources, events
 from django.urls import reverse
 from django.contrib.auth.models import User
+from .forms import MeetingForm
 
 # Create your tests here.
 
@@ -72,3 +74,23 @@ def test_meeting_detail_success(self):
         # Assert that self.post is actually returned by the post_detail view
         self.assertEqual(response.status_code, 200)
      
+
+class NewMeetingForm(TestCase):
+    def test_meetingform(self):
+        form=MeetingForm (data={
+            'meetingtitle':'holiday', 
+            'meetingdate':'07/04/2021', 
+            'meetingtime':'12:00', 
+            'location':'Gas Work Park', 
+            'agenda': 'enjoy...',
+            'meetingurl': 'http://4thjulypartyexemple.com'})
+        self.assertTrue(form.is_valid)
+
+    def test_Meetingform_Invalid(self):
+        form=MeetingForm (data={
+            'meetingtitle':'holiday',  
+            'meetingtime':'9:00', 
+            'location':'Gas Work Park', 
+            'agenda': 'enjoy...',
+            'meetingurl': 'http://4thjulypartyexemple.com'})
+        self.assertFalse(form.is_valid)
