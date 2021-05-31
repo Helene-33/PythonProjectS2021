@@ -5,6 +5,7 @@ from .views import index, meetings, meetingsdetail, meetingsminutes, resources, 
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .forms import MeetingForm
+from django.urls import reverse_lazy, reverse
 
 # Create your tests here.
 
@@ -23,7 +24,6 @@ class MeetingTest(TestCase):
    def test_table(self):
        self.assertEqual(str(Meeting._meta.db_table), 'meeting')
 
-
 class MeetingMinutesTest(TestCase):
    def test_string(self):
        type=MeetingMinutes(minutestext="Jeff's job")
@@ -31,7 +31,6 @@ class MeetingMinutesTest(TestCase):
 
    def test_table(self):
        self.assertEqual(str(MeetingMinutes._meta.db_table), 'meetingminutes')
-
 
 class ResourceTest(TestCase):
    def test_string(self):
@@ -60,7 +59,6 @@ class MeetingTest(TestCase):
        response = self.client.get(reverse('meetings'))
        self.assertEqual(response.status_code, 200)
 
-
 def setUp(self):
         self.u=User.objects.create(username='myuser')
         self.type=Meeting.objects.create(meetingtitle='Firstmeeting')
@@ -68,13 +66,11 @@ def setUp(self):
         self.res=Resource.objects.create(resourcename='New website')
         self.eve = Event.objects.create(eventtitle='Luch the new website')
 
-
 def test_meeting_detail_success(self):
         response = self.client.get(reverse('meetingdetails', args=(self.meet.id,)))
         # Assert that self.post is actually returned by the post_detail view
         self.assertEqual(response.status_code, 200)
      
-
 class NewMeetingForm(TestCase):
     def test_meetingform(self):
         form=MeetingForm (data={
@@ -94,3 +90,14 @@ class NewMeetingForm(TestCase):
             'agenda': 'enjoy...',
             'meetingurl': 'http://4thjulypartyexemple.com'})
         self.assertFalse(form.is_valid)
+
+
+class New_Meeting_Authentication_Test(TestCase):
+    def setUp(self):
+        self.test_user=User.objects.create_user(username='testuser1', password='Cesaire23')
+        self.type=Type.objects.create(meetingtitle='Firstmeeting')
+        self.meeting=Meeting.objects.create(meetingtitle="Firstmeeting", meetingdate="25th May 2021", meetingtime="11am")
+    
+    def test_redirect_if_not_logged_in(self):
+        response.self.client.get(reverse('newmeeting'))
+        self.assertRedirects(response, '/accounts/login/?next=/Club/newmeeting/')
